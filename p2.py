@@ -36,6 +36,7 @@ class UserManager:
         with open(fPath,"r",encoding="utf-8") as f:
             data=json.load(f)
             self.users=data
+            self.maxid=0
             for user in self.users:
                 self.maxid=max(self.maxid,user["id"])
             self.maxid+=1
