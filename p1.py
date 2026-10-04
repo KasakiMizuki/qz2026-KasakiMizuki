@@ -1,20 +1,25 @@
 import json
 def analyze_log(filepath):
     total=0
-    by_level=0
+    by_level={}
     by_user={}
     last_error=None
     try :
         with open(filepath,"r",encoding="utf-8") as f:
-            data=json.load(f)
-            if not data:
-                return {"total":total,"by_level":by_level,"by_user":by_user,"last_error":last_error}
-            for info in data:
-                if type(info) is not dict:
+            for line in f:
+                line=line.strip()
+                if not line:
                     continue
-                if info!={"timestamp","level","message","user"}:
+                try:
+                    info=json.loads(line)
+                except json.decoder.JSONDecodeError:
                     continue
-
+                total+=1
+                by_level[info["level"]]=by_level.get(info["level"],0)+1
+                by_user[info["user"]]=by_user.get(info["user"],0)+1
+                if info["level"] == "ERROR":
+                    last_error = info["message"]
     except FileNotFoundError:
-        return {"total":total,"by_level":by_level,"by_user":by_user,"last_error":last_error}
-    return {"total":total,"by_level":by_level,"by_user":by_user,"last_error":last_error}
+        pass
+    return {"total":total,"by_level":dict(sorted(by_level.items(),key=lambda kv:kv[1],reverse=True)),"by_user":dict(sorted(by_user.items(),key=lambda kv:kv[1],reverse=True)),"last_error":last_error}
+
