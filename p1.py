@@ -1,11 +1,14 @@
 import json
+import os
 def analyze_log(filepath):
+    base_dir=os.path.dirname(os.path.abspath(__file__))
+    full_path=os.path.join(base_dir, filepath)
     total=0
     by_level={}
     by_user={}
     last_error=None
     try :
-        with open(filepath,"r",encoding="utf-8") as f:
+        with open(full_path,"r",encoding="utf-8") as f:
             for line in f:
                 line=line.strip()
                 if not line:
@@ -22,4 +25,3 @@ def analyze_log(filepath):
     except FileNotFoundError:
         pass
     return {"total":total,"by_level":dict(sorted(by_level.items(),key=lambda kv:kv[1],reverse=True)),"by_user":dict(sorted(by_user.items(),key=lambda kv:kv[1],reverse=True)),"last_error":last_error}
-

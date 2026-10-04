@@ -1,11 +1,11 @@
 import json
 class UserManager:
     def __init__(self):
-        self.users= []
+        self.users=[]
         self.maxid=1
     def add_user(self,name,age):
         self.users.append({"id":self.maxid,"name":name,"age":age})
-        self.maxid += 1
+        self.maxid+=1
         return self.users[-1]
     def get_user(self,target):
         for user in self.users:
@@ -40,9 +40,3 @@ class UserManager:
             for user in self.users:
                 self.maxid=max(self.maxid,user["id"])
             self.maxid+=1
-
-um=UserManager()
-um.add_user("Mortis",2)
-um.add_user("Oblivious",18)
-for user in um.users:
-    print(user)
